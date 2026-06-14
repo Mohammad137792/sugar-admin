@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "myapp",
-    "slug": "myapp",
+    "name": "sugar-admin",
+    "slug": "sugar-admin",
     "version": "1.0.0",
+    "newArchEnabled": false,
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
