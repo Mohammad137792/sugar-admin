@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet, ViewStyle } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { colors } from "../../constants/colors";
+import { useTheme } from "../../context/ThemeContext";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 
@@ -16,6 +16,7 @@ interface Props {
 export default function Button({
   label, onPress, variant = "primary", loading = false, disabled = false, style,
 }: Props) {
+  const { colors } = useTheme();
   const isDisabled = disabled || loading;
 
   if (variant === "primary") {
@@ -27,7 +28,7 @@ export default function Button({
         style={[styles.wrap, isDisabled && styles.disabled, style]}
       >
         <LinearGradient
-          colors={colors.gradientBrand}
+          colors={[colors.violet, colors.pink]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.gradient}
@@ -41,10 +42,6 @@ export default function Button({
     );
   }
 
-  const secondary = variant === "secondary";
-  const ghost     = variant === "ghost";
-  const danger    = variant === "danger";
-
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -53,23 +50,29 @@ export default function Button({
       style={[
         styles.wrap,
         styles.base,
-        secondary && styles.secondary,
-        ghost     && styles.ghost,
-        danger    && styles.danger,
+        variant === "secondary" && {
+          backgroundColor: colors.btnSecondaryBg,
+          borderWidth: 1,
+          borderColor: colors.btnSecondaryBorder,
+        },
+        variant === "ghost"  && { backgroundColor: "transparent" },
+        variant === "danger" && {
+          backgroundColor: "rgba(239,68,68,0.12)",
+          borderWidth: 1,
+          borderColor: colors.error,
+        },
         isDisabled && styles.disabled,
         style,
       ]}
     >
       {loading
         ? <ActivityIndicator color={colors.violetLight} size="small" />
-        : (
-          <Text style={[
+        : <Text style={[
             styles.labelBase,
-            danger && { color: colors.error },
+            { color: variant === "danger" ? colors.error : colors.btnSecondaryText },
           ]}>
             {label}
           </Text>
-        )
       }
     </TouchableOpacity>
   );
@@ -79,10 +82,7 @@ const styles = StyleSheet.create({
   wrap:         { borderRadius: 14, overflow: "hidden" },
   gradient:     { paddingVertical: 15, alignItems: "center", borderRadius: 14 },
   base:         { paddingVertical: 15, alignItems: "center" },
-  secondary:    { backgroundColor: "rgba(255,255,255,0.04)", borderWidth: 1, borderColor: colors.border },
-  ghost:        { backgroundColor: "transparent" },
-  danger:       { backgroundColor: colors.errorDim, borderWidth: 1, borderColor: colors.error },
   disabled:     { opacity: 0.45 },
   labelPrimary: { color: "#fff", fontSize: 15, fontWeight: "700", letterSpacing: 0.3 },
-  labelBase:    { color: colors.textSecondary, fontSize: 15, fontWeight: "600" },
+  labelBase:    { fontSize: 15, fontWeight: "600" },
 });

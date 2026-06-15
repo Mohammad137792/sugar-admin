@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { colors } from "../constants/colors";
+import { useTheme } from "../context/ThemeContext";
 import type { AppStackParamList } from "./types";
 
 import HomeScreen      from "../screens/HomeScreen";
@@ -10,16 +10,18 @@ import AIChatScreen    from "../features/ai-chat/screens/AIChatScreen";
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
-const screenOptions = {
-  headerStyle:      { backgroundColor: colors.surface },
-  headerTintColor:  colors.textPrimary,
-  headerTitleStyle: { fontWeight: "700" as const },
-  contentStyle:     { backgroundColor: colors.bg },
-};
-
 export default function AppNavigator() {
+  const { colors } = useTheme();
+
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle:      { backgroundColor: colors.surface },
+        headerTintColor:  colors.textPrimary,
+        headerTitleStyle: { fontWeight: "700" as const, color: colors.textPrimary },
+        contentStyle:     { backgroundColor: colors.bg },
+      }}
+    >
       <Stack.Screen name="Home"      component={HomeScreen}      options={{ headerShown: false }} />
       <Stack.Screen name="Dashboard" component={DashboardScreen} options={{ title: "داشبورد" }} />
       <Stack.Screen name="Content"   component={ContentScreen}   options={{ title: "مدیریت محتوا" }} />
